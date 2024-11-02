@@ -45,8 +45,6 @@ public final class TextFileReader {
                 stringBuilder.append(buffer, 0, charsRead);
                 charsRead = bufferedReader.read(buffer, 0, BUFFER_SIZE);
             }
-
-            bufferedReader.close();
         }
 
         stringBuilder.setLength(stringBuilder.lastIndexOf(";") + 1);

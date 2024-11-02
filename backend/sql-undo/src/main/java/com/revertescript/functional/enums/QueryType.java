@@ -1,11 +1,11 @@
 package com.revertescript.functional.enums;
 
-import java.util.Locale;
-
 import com.revertescript.functional.factories.AlterTableQueryFactory;
 import com.revertescript.functional.factories.CreateQueryFactory;
 import com.revertescript.functional.factories.InsertQueryFactory;
 import com.revertescript.functional.factories.QueryFactory;
+
+import java.util.Locale;
 
 /**
  * The {@code QueryType} enum represents different types of SQL queries. Each
@@ -46,39 +46,31 @@ import com.revertescript.functional.factories.QueryFactory;
  */
 public enum QueryType {
     INSERT {
-
         @Override
         public QueryFactory getQueryFactory() {
             return new InsertQueryFactory();
         }
-
     },
 
     CREATE {
-
         @Override
         public QueryFactory getQueryFactory() {
             return new CreateQueryFactory();
         }
-
     },
 
     ALTER_TABLE {
-
         @Override
         public QueryFactory getQueryFactory() {
             return new AlterTableQueryFactory();
         }
-
     },
 
     UPDATE {
-
         @Override
         public QueryFactory getQueryFactory() {
             return null;
         }
-
     };
 
     /**
@@ -93,7 +85,7 @@ public enum QueryType {
      *
      * @param statement The SQL statement.
      * @return The query type associated with the statement, or {@code null} if
-     *         no match is found.
+     * no match is found.
      */
     public static QueryType fromStatement(String statement) {
         String statementTrimToLowerCase = statement.trim()

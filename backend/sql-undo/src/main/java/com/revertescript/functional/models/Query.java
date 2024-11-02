@@ -3,15 +3,15 @@ package com.revertescript.functional.models;
 /**
  * Represents a database query. This is an abstract class that provides common
  * functionality for different types of queries.
- *
+ * <p>
  * The class provides a constructor to initialize the query with the statement
  * and table name. It also provides a getter method to retrieve the table name
  * associated with the query. The `toString()` method is overridden to return
  * the original statement of the query.
- *
+ * <p>
  * This class is intended to be extended by specific query types such as SELECT,
  * INSERT, UPDATE, DELETE, etc.
- *
+ * <p>
  * Instances of this class are immutable once created.
  *
  * @author Luan Nadaletti

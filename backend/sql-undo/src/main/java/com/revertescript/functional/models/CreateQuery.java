@@ -6,10 +6,10 @@ import com.revertescript.functional.enums.CreateQueryType;
  * Represents a CREATE query, used to create a new database table. This class
  * extends the {@link Query} class and provides an additional property for the
  * type of create query.
- *
+ * <p>
  * The class provides a getter method to retrieve the create query type
  * associated with the query.
- *
+ * <p>
  * Instances of this class are immutable once created.
  *
  * @author Luan Nadaletti
@@ -28,7 +28,7 @@ public class CreateQuery extends Query {
      *                        SEQUENCE).
      */
     public CreateQuery(String statement, String table,
-            CreateQueryType createQueryType) {
+                       CreateQueryType createQueryType) {
         super(statement, table);
         this.createQueryType = createQueryType;
     }

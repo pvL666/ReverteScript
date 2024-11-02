@@ -1,13 +1,13 @@
 package com.revertescript.functional.parsers;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.revertescript.functional.enums.QueryType;
 import com.revertescript.functional.exception.UnsupportedQueryException;
 import com.revertescript.functional.factories.QueryFactory;
 import com.revertescript.functional.models.Query;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * The QueryParser class is responsible for parsing a given SQL script and
@@ -20,7 +20,6 @@ import com.revertescript.functional.models.Query;
  * </p>
  *
  * @author Luan Nadaletti
- *
  * @see Query
  */
 public class QueryParser {
@@ -67,7 +66,7 @@ public class QueryParser {
             }
         }
 
-        if (currentStatement.length() > 0) {
+        if (!currentStatement.isEmpty()) {
             addQuery(currentStatement.toString());
         }
 

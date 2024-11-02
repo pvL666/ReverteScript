@@ -29,35 +29,28 @@ import com.revertescript.functional.reversers.QueryReverser;
  * </p>
  *
  * @author Luan Nadaletti
- *
  * @see QueryReverser
  */
 public enum QueryReverserType {
     INSERT_REVERSER {
-
         @Override
         public QueryReverser getQueryReverser() {
             return new InsertQueryReverser();
         }
-
     },
 
     CREATE_REVERSER {
-
         @Override
         public QueryReverser getQueryReverser() {
             return new CreateQueryReverser();
         }
-
     },
 
     ALTER_TABLE_REVERSER {
-
         @Override
         public QueryReverser getQueryReverser() {
             return new AlterTableQueryReverser();
         }
-
     };
 
     /**
@@ -73,9 +66,8 @@ public enum QueryReverserType {
      * object.
      *
      * @param query The query object.
-     *
      * @return The query reverser type associated with the query, or
-     *         {@code null} if no match is found.
+     * {@code null} if no match is found.
      */
     public static QueryReverserType fromQuery(Query query) {
         if (query.toString().contains("INSERT INTO")

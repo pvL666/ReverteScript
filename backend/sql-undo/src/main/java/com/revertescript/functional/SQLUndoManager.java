@@ -8,13 +8,13 @@ import com.revertescript.functional.models.Query;
 import com.revertescript.functional.parsers.QueryParser;
 import com.revertescript.functional.reversers.QueryReverser;
 
-public class ReverteScriptManager {
+public class SQLUndoManager {
 
 	public static String reverse(String scriptText) {
 		StringBuilder reversedScript = new StringBuilder();
 
 		for (Query query : parseQueries(scriptText)) {
-			reversedScript.append(reverseQuery(query) + "\n");
+			reversedScript.append(reverseQuery(query)).append("\n");
 		}
 
 		return reversedScript.toString();

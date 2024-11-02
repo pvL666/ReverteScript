@@ -7,20 +7,16 @@ package com.revertescript.functional.enums;
 public enum CreateQueryType {
 
     TABLE {
-
         @Override
         public String getKeyWord() {
             return "TABLE";
         }
-
     },
     SEQUENCE {
-
         @Override
         public String getKeyWord() {
             return "SEQUENCE";
         }
-
     };
 
     /**
@@ -34,19 +30,16 @@ public enum CreateQueryType {
      * Returns the query type based on a type string.
      *
      * @param type The type string to be converted to a query type.
-     *
      * @return The query type corresponding to the type string, or null if not
-     *         found.
+     * found.
      */
     public static CreateQueryType fromType(String type) {
         if ("TABLE".equalsIgnoreCase(type)) {
             return TABLE;
         }
-
         if ("SEQUENCE".equalsIgnoreCase(type)) {
             return SEQUENCE;
         }
-
         return null;
     }
 

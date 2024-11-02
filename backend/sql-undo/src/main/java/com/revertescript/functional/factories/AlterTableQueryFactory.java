@@ -1,25 +1,25 @@
 package com.revertescript.functional.factories;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.revertescript.functional.models.AlterTableQuery;
 import com.revertescript.functional.models.Query;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Factory class responsible for creating an {@link AlterTableQuery} object
  * based on a provided statement. The statement is parsed using a regular
  * expression pattern, and the extracted values are used to create the query
  * object.
- *
+ * <p>
  * The expected format of the statement is: ALTER TABLE
  * <table>
  * <operator> <column> <dataType>
- *
+ * <p>
  * The factory uses regular expressions to extract the relevant parts from the
  * statement and creates an {@link AlterTableQuery} object with the extracted
  * values.
- *
+ * <p>
  * This factory only supports parsing ALTER TABLE statements with the specified
  * format.
  *
@@ -32,9 +32,7 @@ public class AlterTableQueryFactory implements QueryFactory {
      * statement.
      *
      * @param statement The ALTER TABLE statement to create the query from.
-     *
      * @return An {@link AlterTableQuery} object representing the parsed query.
-     *
      * @throws IllegalArgumentException If the statement is invalid and cannot
      *                                  be parsed.
      */

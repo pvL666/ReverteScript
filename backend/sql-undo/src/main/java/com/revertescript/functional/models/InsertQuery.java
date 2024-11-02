@@ -6,10 +6,10 @@ import java.util.List;
  * Represents an INSERT query, used to insert data into a database table. This
  * class extends the {@link Query} class and provides additional properties for
  * the fields and values of the insert query.
- *
+ * <p>
  * The class provides getter methods to retrieve the fields and values
  * associated with the insert query.
- *
+ * <p>
  * Instances of this class are immutable once created.
  *
  * @author Luan Nadaletti
@@ -29,7 +29,7 @@ public class InsertQuery extends Query {
      * @param values    The corresponding values for the fields.
      */
     public InsertQuery(String statement, String table, List<String> fields,
-            List<String> values) {
+                       List<String> values) {
         super(statement, table);
         this.fields = fields;
         this.values = values;
