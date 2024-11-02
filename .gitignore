@@ -94,4 +94,5 @@ target/
 jacoco-report/*
 !jacoco-report/jacoco.xml
 
-.idea/*
+.idea/**
+backend/.idea/**
