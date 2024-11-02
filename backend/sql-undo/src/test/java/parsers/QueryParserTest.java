@@ -8,9 +8,9 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.revertescript.functional.models.InsertQuery;
-import com.revertescript.functional.models.Query;
-import com.revertescript.functional.parsers.QueryParser;
+import com.sqlundo.functional.models.InsertQuery;
+import com.sqlundo.functional.models.Query;
+import com.sqlundo.functional.parsers.QueryParser;
 
 /**
  * @author Luan Nadaletti
