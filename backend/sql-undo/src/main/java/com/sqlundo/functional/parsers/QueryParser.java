@@ -24,92 +24,106 @@ import java.util.List;
  */
 public class QueryParser {
 
-    private static final char STRING_DELIMITER = '\'';
+	private static final char STRING_DELIMITER = '\'';
 
-    private final String script;
-    private final List<Query> queries = new LinkedList<>();
+	private final String script;
+	private final List<Query> queries = new LinkedList<>();
 
-    private int currentIndex;
-    private boolean insideString;
+	private int currentIndex;
+	private boolean insideString;
 
-    /**
-     * Creates a new instance of QueryParser with the provided SQL script.
-     *
-     * @param script The SQL script to be parsed.
-     */
-    public QueryParser(String script) {
-        this.script = script;
-    }
+	/**
+	 * Creates a new instance of QueryParser with the provided SQL script.
+	 *
+	 * @param script The SQL script to be parsed.
+	 */
+	public QueryParser(String script) {
+		this.script = script;
+	}
 
-    /**
-     * Parses the provided SQL script and returns a list of all SQL statements
-     * found.
-     *
-     * @return A list of all SQL statements found in the script.
-     */
-    public List<Query> parse() {
-        StringBuilder currentStatement = new StringBuilder();
+	/**
+	 * Parses the provided SQL script and returns a list of all SQL statements
+	 * found.
+	 *
+	 * @return A list of all SQL statements found in the script.
+	 */
+	public List<Query> parse() {
+		StringBuilder currentStatement = new StringBuilder();
 
-        while (currentIndex < script.length()) {
-            char character = getNextCharacter();
+		while (currentIndex < script.length()) {
+			char character = getNextCharacter();
 
-            if (character == STRING_DELIMITER) {
-                handleStringDelimiter();
-            }
+			if (character == STRING_DELIMITER) {
+				handleStringDelimiter();
+			}
 
-            if (!insideString && character == ';') {
-                currentStatement.append(character);
-                addQuery(currentStatement.toString());
-                currentStatement.setLength(0);
-            } else {
-                currentStatement.append(character);
-            }
-        }
+			if (!insideString && character == ';') {
+				currentStatement.append(character);
+				addQuery(formatStatement(currentStatement.toString()));
+				currentStatement.setLength(0);
+			} else {
+				currentStatement.append(character);
+			}
+		}
 
-        if (!currentStatement.isEmpty()) {
-            addQuery(currentStatement.toString());
-        }
+		if (!currentStatement.isEmpty()) {
+			addQuery(formatStatement(currentStatement.toString()));
+		}
 
-        Collections.reverse(queries);
-        return queries;
-    }
+		Collections.reverse(queries);
+		return queries;
+	}
 
-    /**
-     * Adds a new query to the list of queries.
-     *
-     * @param statement The SQL statement to be added.
-     */
-    private void addQuery(String statement) {
-        QueryType queryType = QueryType.fromStatement(statement);
-        if (QueryType.UPDATE.equals(queryType)) {
-            return;
-        }
+	/**
+	 * Adds a new query to the list of queries.
+	 *
+	 * @param statement The SQL statement to be added.
+	 */
+	private void addQuery(String statement) {
+		QueryType queryType = QueryType.fromStatement(statement);
+		if (QueryType.UPDATE.equals(queryType)) {
+			return;
+		}
 
-        if (queryType == null) {
-            throw new UnsupportedQueryException(
-                    "Unable to identify query type:: " + statement);
-        }
+		if (queryType == null) {
+			throw new UnsupportedQueryException("Unable to identify query type:: " + statement);
+		}
 
-        QueryFactory factory = queryType.getQueryFactory();
+		QueryFactory factory = queryType.getQueryFactory();
 
-        queries.add(factory.createQuery(statement));
-    }
+		queries.add(factory.createQuery(statement));
+	}
 
-    /**
-     * Retrieves the next character from the SQL script.
-     *
-     * @return The next character from the script.
-     */
-    private char getNextCharacter() {
-        return script.charAt(currentIndex++);
-    }
+	/**
+	 * Formats the SQL statement by trimming whitespace and ensuring it ends with a
+	 * semicolon.
+	 *
+	 * @param statement The SQL statement to be formatted.
+	 * @return The formatted SQL statement.
+	 */
+	private String formatStatement(String statement) {
+		String trimmedStatement = statement.trim();
+		if (!trimmedStatement.endsWith(";")) {
+			trimmedStatement += ";";
+		}
 
-    /**
-     * Handles the string delimiter ('), toggling the inside/outside string
-     * state.
-     */
-    private void handleStringDelimiter() {
-        insideString = !insideString;
-    }
+		return trimmedStatement;
+	}
+
+	/**
+	 * Retrieves the next character from the SQL script.
+	 *
+	 * @return The next character from the script.
+	 */
+	private char getNextCharacter() {
+		return script.charAt(currentIndex++);
+	}
+
+	/**
+	 * Handles the string delimiter ('), toggling the inside/outside string state.
+	 */
+	private void handleStringDelimiter() {
+		insideString = !insideString;
+	}
 
 }
