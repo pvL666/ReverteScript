@@ -1,5 +1,6 @@
 package com.sqlundo.functional.factories;
 
+import com.sqlundo.functional.exception.MalformattedQueryException;
 import com.sqlundo.functional.models.InsertQuery;
 import com.sqlundo.functional.models.Query;
 
@@ -42,7 +43,7 @@ public class InsertQueryFactory implements QueryFactory {
      *
      * @param statement The INSERT statement to create the query from.
      * @return An {@link InsertQuery} object representing the parsed query.
-     * @throws IllegalArgumentException If the statement is invalid and cannot
+     * @throws MalformattedQueryException If the statement is invalid and cannot
      *                                  be parsed.
      */
     @Override
@@ -52,7 +53,7 @@ public class InsertQueryFactory implements QueryFactory {
         Matcher matcher = pattern.matcher(statement);
 
         if (!matcher.find()) {
-            throw new IllegalArgumentException("Invalid INSERT statement: " + statement);
+            throw new MalformattedQueryException("Invalid INSERT statement: " + statement);
         }
 
         String table = matcher.group(1);

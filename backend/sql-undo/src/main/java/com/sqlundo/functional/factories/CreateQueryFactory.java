@@ -1,6 +1,7 @@
 package com.sqlundo.functional.factories;
 
 import com.sqlundo.functional.enums.CreateQueryType;
+import com.sqlundo.functional.exception.MalformattedQueryException;
 import com.sqlundo.functional.models.CreateQuery;
 import com.sqlundo.functional.models.Query;
 
@@ -34,8 +35,8 @@ public class CreateQueryFactory implements QueryFactory {
      *
      * @param statement The CREATE statement to create the query from.
      * @return A {@link CreateQuery} object representing the parsed query.
-     * @throws IllegalArgumentException If the statement is invalid and cannot
-     *                                  be parsed.
+     * @throws MalformattedQueryException If the statement is invalid and cannot be
+     *                                    parsed.
      */
     @Override
     public Query createQuery(String statement) {
@@ -44,14 +45,13 @@ public class CreateQueryFactory implements QueryFactory {
         Matcher matcher = pattern.matcher(statement);
 
         if (!matcher.find()) {
-            throw new IllegalArgumentException("Invalid CREATE statement: " + statement);
+            throw new MalformattedQueryException("Invalid CREATE statement: " + statement);
         }
 
         String type = matcher.group(1);
         String table = matcher.group(2);
 
-        return new CreateQuery(statement, table,
-                CreateQueryType.fromType(type));
+        return new CreateQuery(statement, table, CreateQueryType.fromType(type));
     }
 
 }

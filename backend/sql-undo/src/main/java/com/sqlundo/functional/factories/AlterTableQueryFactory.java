@@ -1,10 +1,11 @@
 package com.sqlundo.functional.factories;
 
-import com.sqlundo.functional.models.AlterTableQuery;
-import com.sqlundo.functional.models.Query;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.sqlundo.functional.exception.MalformattedQueryException;
+import com.sqlundo.functional.models.AlterTableQuery;
+import com.sqlundo.functional.models.Query;
 
 /**
  * Factory class responsible for creating an {@link AlterTableQuery} object
@@ -28,13 +29,12 @@ import java.util.regex.Pattern;
 public class AlterTableQueryFactory implements QueryFactory {
 
     /**
-     * Creates an {@link AlterTableQuery} object based on the provided
-     * statement.
+     * Creates an {@link AlterTableQuery} object based on the provided statement.
      *
      * @param statement The ALTER TABLE statement to create the query from.
      * @return An {@link AlterTableQuery} object representing the parsed query.
-     * @throws IllegalArgumentException If the statement is invalid and cannot
-     *                                  be parsed.
+     * @throws MalformattedQueryException If the statement is invalid and cannot be
+     *                                    parsed.
      */
     @Override
     public Query createQuery(String statement) {
@@ -43,7 +43,7 @@ public class AlterTableQueryFactory implements QueryFactory {
         Matcher matcher = pattern.matcher(statement);
 
         if (!matcher.find()) {
-            throw new IllegalArgumentException("Invalid ALTER TABLE statement");
+            throw new MalformattedQueryException("Invalid ALTER TABLE statement");
         }
 
         String table = matcher.group(1);
@@ -54,8 +54,7 @@ public class AlterTableQueryFactory implements QueryFactory {
         boolean isColumnType = matcher.group(3) != null;
         boolean isConstraintType = matcher.group(4) != null;
 
-        return new AlterTableQuery(statement, table, operator, column, dataType,
-                isColumnType, isConstraintType);
+        return new AlterTableQuery(statement, table, operator, column, dataType, isColumnType, isConstraintType);
     }
 
 }
