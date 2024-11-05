@@ -29,7 +29,7 @@ public class CreateQueryReverser extends QueryReverser {
     public String reverse(Query query) {
         CreateQuery createQuery = (CreateQuery) query;
 
-        return String.format("DROP %s %s;\n",
+        return String.format("DROP %s %s;",
                 createQuery.getCreateQueryType().getKeyWord(),
                 createQuery.getTable());
     }
