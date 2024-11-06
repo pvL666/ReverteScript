@@ -23,6 +23,21 @@ class InsertQueryFactoryTest {
 
     @Test
     void testInsertQuerySingleValue() {
+        String script = "INSERT INTO table (field1) VALUES ('value1');";
+        InsertQueryFactory factory = new InsertQueryFactory();
+
+        Query query = factory.createQuery(script);
+        assertTrue(query instanceof InsertQuery);
+
+        InsertQuery insertQuery = (InsertQuery) query;
+        assertEquals(insertQuery.getTable(), "table");
+        assertIterableEquals(insertQuery.getFields(), Arrays.asList("field1"));
+        assertIterableEquals(insertQuery.getValues(), Arrays.asList("'value1'"));
+        assertEquals(insertQuery.toString(), script);
+    }
+
+    @Test
+    void testInsertQueryMultipleValues() {
         String script = "INSERT INTO table (field1, field2) VALUES ('value1', value2);";
         InsertQueryFactory factory = new InsertQueryFactory();
 
@@ -37,7 +52,7 @@ class InsertQueryFactoryTest {
     }
 
     @Test
-    void testInsertQueryInvalidStatement() {
+    void testInsertQueryInvalidScript() {
         String script = "INSERT INTO";
         InsertQueryFactory factory = new InsertQueryFactory();
 
