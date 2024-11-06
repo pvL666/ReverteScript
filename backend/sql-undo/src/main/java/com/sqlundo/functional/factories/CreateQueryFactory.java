@@ -40,7 +40,7 @@ public class CreateQueryFactory implements QueryFactory {
      */
     @Override
     public Query createQuery(String statement) {
-        String regex = "\\s*CREATE\\s*(\\w*)\\s*(\\w*)\\s*";
+        String regex = "\\s*CREATE\\s*(TABLE|SEQUENCE)\\s*(\\w+)\\s*";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(statement);
 
