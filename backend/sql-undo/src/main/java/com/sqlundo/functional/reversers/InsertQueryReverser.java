@@ -45,7 +45,7 @@ public class InsertQueryReverser extends QueryReverser {
             }
         }
 
-        return String.format("DELETE FROM %s WHERE %s;\n",
+        return String.format("DELETE FROM %s WHERE %s;",
                 insertQuery.getTable(), where);
     }
 
