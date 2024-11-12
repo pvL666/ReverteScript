@@ -3,6 +3,7 @@ package com.sqlundo.functional.factories;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sqlundo.functional.enums.AlterType;
 import com.sqlundo.functional.exception.MalformattedQueryException;
 import com.sqlundo.functional.models.AlterTableQuery;
 import com.sqlundo.functional.models.Query;
@@ -50,11 +51,15 @@ public class AlterTableQueryFactory implements QueryFactory {
         String operator = matcher.group(2);
         String column = matcher.group(5);
         String dataType = matcher.group(6);
+        AlterType alterType = AlterType.NONE;
 
-        boolean isColumnType = matcher.group(3) != null;
-        boolean isConstraintType = matcher.group(4) != null;
+        if (matcher.group(3) != null) {
+            alterType = AlterType.COLUMN;
+        } else if (matcher.group(4) != null) {
+            alterType = AlterType.CONSTRAINT;
+        }
 
-        return new AlterTableQuery(statement, table, operator, column, dataType, isColumnType, isConstraintType);
+        return new AlterTableQuery(statement, table, operator, column, dataType, alterType);
     }
 
 }

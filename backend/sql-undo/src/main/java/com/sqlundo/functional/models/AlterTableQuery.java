@@ -3,6 +3,8 @@ package com.sqlundo.functional.models;
 import java.util.Locale;
 import java.util.Map;
 
+import com.sqlundo.functional.enums.AlterType;
+
 /**
  * Represents an ALTER TABLE query, which modifies the structure of a database
  * table. This class extends the {@link Query} class and provides additional
@@ -26,15 +28,14 @@ public class AlterTableQuery extends Query {
     private final String operator;
     private final String target;
     private final String dataType;
-    private final boolean columnType;
-    private final boolean constraintType;
+    private final AlterType alterType;
 
-    private final Map<String, String> operatorToReverseOperation = Map
-            .ofEntries(Map.entry("ADD", "DROP"), Map.entry("DROP", "ADD"));
+    private final Map<String, String> operatorToReverseOperation = Map.ofEntries(Map.entry("ADD", "DROP"),
+            Map.entry("DROP", "ADD"));
 
     /**
-     * Constructs an AlterTableQuery object with the provided statement, table
-     * name, operator, column name, and data type.
+     * Constructs an AlterTableQuery object with the provided statement, table name,
+     * operator, column name, and data type.
      *
      * @param statement      The original statement of the ALTER TABLE query.
      * @param table          The name of the table being altered.
@@ -42,49 +43,42 @@ public class AlterTableQuery extends Query {
      *                       DROP).
      * @param target         The name of the target on table being modified.
      * @param dataType       The data type of the column (optional).
-     * @param columnType     A flag indicating if the target is a column (true)
+     * @param columnType     A flag indicating if the target is a column (true) or
+     *                       not (false).
+     * @param constraintType A flag indicating if the target is a constraint (true)
      *                       or not (false).
-     * @param constraintType A flag indicating if the target is a constraint
-     *                       (true) or not (false).
      */
-    public AlterTableQuery(String statement, String table, String operator,
-                           String target, String dataType, boolean columnType,
-                           boolean constraintType) {
+    public AlterTableQuery(String statement, String table, String operator, String target, String dataType,
+            AlterType alterType) {
         super(statement, table);
         this.operator = operator;
         this.target = target;
         this.dataType = dataType;
-        this.columnType = columnType;
-        this.constraintType = constraintType;
+        this.alterType = alterType;
     }
 
     /**
-     * Retrieves the reverse operation for the given operator. The reverse
-     * operation is determined based on the operator using a predefined mapping.
+     * Retrieves the reverse operation for the given operator. The reverse operation
+     * is determined based on the operator using a predefined mapping.
      *
      * @return The reverse operation for the operator.
      */
     public String getReverseOperation() {
-        return operatorToReverseOperation
-                .get(operator.toUpperCase(Locale.ROOT));
+        return operatorToReverseOperation.get(operator.toUpperCase(Locale.ROOT));
     }
 
     /**
-     * Gets the column definition clause based on the column and constraint
-     * types.
+     * Gets the column definition clause based on the column and constraint types.
      *
-     * @return The column definition clause ("COLUMN" or "CONSTRAINT") based on
-     * the types. Returns null if neither columnType nor constraintType
-     * is true.
+     * @return The column definition clause ("COLUMN" or "CONSTRAINT") based on the
+     *         types. Returns null if neither columnType nor constraintType is true.
      */
     public String getColumnDefinitionClause() {
-        if (columnType) {
-            return "COLUMN";
-        } else if (constraintType) {
-            return "CONSTRAINT";
-        }
-
-        return null;
+        return switch (alterType) {
+        case COLUMN -> "COLUMN";
+        case CONSTRAINT -> "CONSTRAINT";
+        case NONE -> "";
+        };
     }
 
     public String getOperator() {

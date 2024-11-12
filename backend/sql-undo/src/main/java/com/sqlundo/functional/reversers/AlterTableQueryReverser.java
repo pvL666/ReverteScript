@@ -22,19 +22,18 @@ public class AlterTableQueryReverser extends QueryReverser {
      *
      * @param query The AlterTableQuery to be reversed.
      * @return The reversed SQL statement.
-     * @throws IllegalArgumentException If the provided query is not an instance
-     *                                  of AlterTableQuery.
+     * @throws IllegalArgumentException If the provided query is not an instance of
+     *                                  AlterTableQuery.
      */
     @Override
     public String reverse(Query query) {
         AlterTableQuery alterTableQuery = (AlterTableQuery) query;
+        String columnDefinitionClause = alterTableQuery.getColumnDefinitionClause();
 
-        String columnDefinitionClause = alterTableQuery
-                .getColumnDefinitionClause();
-
-        return String.format("ALTER TABLE %s %s %s %s;",
+        return String.format("ALTER TABLE %s %s%s %s;",
                 alterTableQuery.getTable(),
-                alterTableQuery.getReverseOperation(), columnDefinitionClause,
+                alterTableQuery.getReverseOperation(),
+                columnDefinitionClause.isEmpty() ? "" : " " + columnDefinitionClause,
                 alterTableQuery.getTarget());
     }
 
