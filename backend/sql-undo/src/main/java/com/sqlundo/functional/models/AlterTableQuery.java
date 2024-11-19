@@ -93,4 +93,8 @@ public class AlterTableQuery extends Query {
         return dataType;
     }
 
+    public AlterType getAlterType() {
+        return alterType;
+    }
+
 }

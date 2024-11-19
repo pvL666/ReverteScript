@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+import com.sqlundo.functional.enums.AlterType;
 import com.sqlundo.functional.exception.MalformattedQueryException;
 import com.sqlundo.functional.factories.AlterTableQueryFactory;
 import com.sqlundo.functional.models.AlterTableQuery;
@@ -27,6 +28,7 @@ class AlterTableQueryFactoryTest {
         assertEquals("ADD", query.getOperator(), "Operator mismatch.");
         assertEquals("myColumn", query.getTarget(), "Target column mismatch.");
         assertEquals("INT", query.getDataType(), "Data type mismatch.");
+        assertEquals(AlterType.COLUMN, query.getAlterType());
     }
 
     @Test
@@ -40,6 +42,7 @@ class AlterTableQueryFactoryTest {
         assertEquals("myTable", query.getTable(), "Table name mismatch.");
         assertEquals("DROP", query.getOperator(), "Operator mismatch.");
         assertEquals("myColumn", query.getTarget(), "Target column mismatch.");
+        assertEquals(AlterType.COLUMN, query.getAlterType());
     }
 
     @Test
@@ -53,6 +56,7 @@ class AlterTableQueryFactoryTest {
         assertEquals("myTable", query.getTable(), "Table name mismatch.");
         assertEquals("ADD", query.getOperator(), "Operator mismatch.");
         assertEquals("myConstraint", query.getTarget(), "Target constraint mismatch.");
+        assertEquals(AlterType.CONSTRAINT, query.getAlterType());
     }
 
     @Test
@@ -66,6 +70,31 @@ class AlterTableQueryFactoryTest {
         assertEquals("myTable", query.getTable(), "Table name mismatch.");
         assertEquals("DROP", query.getOperator(), "Operator mismatch.");
         assertEquals("myConstraint", query.getTarget(), "Target constraint mismatch.");
+        assertEquals(AlterType.CONSTRAINT, query.getAlterType());
+    }
+
+    @Test
+    void testCreateQueryAddWithoutAlterType() {
+        String statement = "ALTER TABLE myTable ADD myColumn";
+        AlterTableQueryFactory factory = new AlterTableQueryFactory();
+        AlterTableQuery query = (AlterTableQuery) factory.createQuery(statement);
+
+        assertEquals("myTable", query.getTable(), "Table name mismatch.");
+        assertEquals("ADD", query.getOperator(), "Operator mismatch.");
+        assertEquals("myColumn", query.getTarget(), "Target column mismatch.");
+        assertEquals(AlterType.NONE, query.getAlterType());
+    }
+
+    @Test
+    void testCreateQueryDropWithoutAlterType() {
+        String statement = "ALTER TABLE myTable DROP myColumn";
+        AlterTableQueryFactory factory = new AlterTableQueryFactory();
+        AlterTableQuery query = (AlterTableQuery) factory.createQuery(statement);
+
+        assertEquals("myTable", query.getTable(), "Table name mismatch.");
+        assertEquals("DROP", query.getOperator(), "Operator mismatch.");
+        assertEquals("myColumn", query.getTarget(), "Target column mismatch.");
+        assertEquals(AlterType.NONE, query.getAlterType());
     }
 
     @Test
