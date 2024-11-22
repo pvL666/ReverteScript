@@ -1,51 +1,49 @@
-import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { undoScript } from "../../api/sqlUndoApi";
-import { Script } from "../../models/script";
+import { revertScript } from "../../api/sqlUndoApi";
+import SQLHoverEditor from "../../components/SQLHoverEditor";
+import UserInputEditor from "../../components/UserInputEditor";
+import Query from "../../models/query";
+import Script from "../../models/script";
 
 const Main: React.FC = () => {
-    const [scriptText, setScriptText] = useState<string>("");
-    const [reversedScript, setReversedScript] = useState<string>("");
-    const [reverseError, setReverseError] = useState<string>("");
+	const [queries, setQueries] = useState<Query[]>([]);
+	const [scriptText, setScriptText] = useState<string>("");
+	const [revertError, setRevertError] = useState<string>("");
 
-    const mutation = useMutation({
-        mutationFn: undoScript,
-        mutationKey: ["script"],
-        onSuccess: setReversedScript,
-        onError: setReverseError,
-    });
+	const handleRevertScript = async () => {
+		try {
+			const script: Script = { script: scriptText };
+			const result = await revertScript(script);
+			setQueries(result);
+			setRevertError("");
+		} catch (error: any) {
+			setRevertError(error.message || "An unexpected error occurred.");
+		}
+	};
 
-    const undo = () => {
-        const script: Script = {
-            script: scriptText
-        };
+	return (
+		<div className="flex flex-col space-y-6 p-8 bg-gray-900 text-white min-h-screen">
+			<h1 className="text-2xl font-bold text-center">SQLUndo</h1>
 
-        mutation.mutate(script);
-    }
+			<div className="flex flex-col lg:flex-row items-center lg:space-x-6 space-y-4 lg:space-y-0">
+				<section className="flex-1">
+					<h2 className="text-lg font-semibold mb-2">Enter SQL Script</h2>
+					<UserInputEditor value={scriptText} onChange={(newValue) => setScriptText(newValue)} />
+				</section>
 
-    return <>
-        <div className="w-screen h-screen">
-            <div className="p-4 flex justify-center align-middle">
-                <div id="script" className="w-full h-64">
-                    <textarea className="border-2 w-full h-full resize-none p-2 text-sm" value={scriptText} onChange={(e) => setScriptText(e.target.value)} />
-                </div>
+				<section className="flex-1">
+					<h2 className="text-lg font-semibold mb-2 ml-4">SQL Output Editor</h2>
+					<SQLHoverEditor queries={queries} />
+				</section>
+			</div>
 
-                <div id="undone-script" className="w-full ml-5">
-                    <textarea className="border-2 w-full h-full resize-none p-2 text-sm" value={reversedScript} disabled />
-                </div>
-            </div>
-
-            <div className="flex w-full justify-between pl-4 pr-4 items-center">
-                <div className="text-red-500 font-bold">
-                    
-                </div>
-
-                <div className="flex justify-end align-middle">
-                    <button className="border p-1 w-20 bg-blue-100 text-blue-900 border-blue-900 rounded-md" onClick={undo}>Undo</button>
-                </div>
-            </div>
-        </div>
-    </>
-}
+			<div className="flex flex-col lg:flex-row items-center lg:space-x-6 space-y-4 lg:space-y-0">
+				<button onClick={handleRevertScript} className="bg-blue-600 hover:bg-blue-500 text-white font-medium py-2 px-6 rounded transition">
+					Revert Script
+				</button>
+			</div>
+		</div>
+	);
+};
 
 export default Main;

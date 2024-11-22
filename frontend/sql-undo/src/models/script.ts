@@ -1,3 +1,3 @@
-export interface Script {
+export default interface Script {
     script: string;
 }

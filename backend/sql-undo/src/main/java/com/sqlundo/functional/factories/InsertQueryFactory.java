@@ -1,14 +1,15 @@
 package com.sqlundo.functional.factories;
 
-import com.sqlundo.functional.exception.MalformattedQueryException;
-import com.sqlundo.functional.models.InsertQuery;
-import com.sqlundo.functional.models.Query;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.sqlundo.functional.exception.MalformattedQueryException;
+import com.sqlundo.functional.models.InsertQuery;
+import com.sqlundo.functional.models.Query;
 
 /**
  * Factory class responsible for creating an {@link InsertQuery} object based on
@@ -49,7 +50,7 @@ public class InsertQueryFactory implements QueryFactory {
     @Override
     public Query createQuery(String statement) {
         String regex = "\\s*INSERT\\s*INTO\\s*(\\w+)\\s*\\((.+)\\)\\s*VALUES\\s*\\((.+)\\)\\s*";
-        Pattern pattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(statement);
 
         if (!matcher.find()) {
@@ -57,12 +58,38 @@ public class InsertQueryFactory implements QueryFactory {
         }
 
         String table = matcher.group(1);
-        List<String> fields = Arrays.stream(matcher.group(2).split(","))
-                .map(String::trim).collect(Collectors.toList());
-        List<String> values = Arrays.stream(matcher.group(3).split(","))
-                .map(String::trim).collect(Collectors.toList());
+        String fieldsGroup = matcher.group(2);
+        String valuesGroup = matcher.group(3);
 
+        List<String> fields = parseFieldsOrValues(fieldsGroup);
+        List<String> values = parseFieldsOrValues(valuesGroup);
         return new InsertQuery(statement, table, fields, values);
+    }
+
+    private List<String> parseFieldsOrValues(String group) {
+        List<String> result = new ArrayList<>();
+        StringBuilder current = new StringBuilder();
+        boolean insideQuotes = false;
+
+        for (char c : group.toCharArray()) {
+            if (c == '"' || c == '\'') {
+                insideQuotes = !insideQuotes;
+            }
+
+            if (c == ',' && !insideQuotes) {
+                result.add(current.toString().trim());
+                current.setLength(0);
+            } else {
+                current.append(c);
+            }
+        }
+
+        // Add the last item
+        if (current.length() > 0) {
+            result.add(current.toString().trim());
+        }
+
+        return result;
     }
 
 }

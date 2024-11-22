@@ -40,7 +40,7 @@ public class AlterTableQueryFactory implements QueryFactory {
     @Override
     public Query createQuery(String statement) {
         String regex = "ALTER TABLE (\\w+)\\s+(ADD|DROP)\\s+(COLUMN\\s+)?(CONSTRAINT\\s+)?(\\w+)?(?:\\s+(\\w+))?";
-        Pattern pattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(statement);
 
         if (!matcher.find()) {

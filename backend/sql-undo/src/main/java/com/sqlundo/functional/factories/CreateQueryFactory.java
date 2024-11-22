@@ -40,8 +40,8 @@ public class CreateQueryFactory implements QueryFactory {
      */
     @Override
     public Query createQuery(String statement) {
-        String regex = "\\s*CREATE\\s*(TABLE|SEQUENCE)\\s*(\\w+)\\s*";
-        Pattern pattern = Pattern.compile(regex);
+        String regex = "\\s*CREATE\\s*(TABLE|SEQUENCE|EXCEPTION)\\s*(\\w+)\\s*";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(statement);
 
         if (!matcher.find()) {

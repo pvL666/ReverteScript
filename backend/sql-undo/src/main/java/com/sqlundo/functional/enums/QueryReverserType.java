@@ -1,5 +1,8 @@
 package com.sqlundo.functional.enums;
 
+import com.sqlundo.functional.models.AlterTableQuery;
+import com.sqlundo.functional.models.CreateQuery;
+import com.sqlundo.functional.models.InsertQuery;
 import com.sqlundo.functional.models.Query;
 import com.sqlundo.functional.reversers.AlterTableQueryReverser;
 import com.sqlundo.functional.reversers.CreateQueryReverser;
@@ -70,14 +73,13 @@ public enum QueryReverserType {
      * {@code null} if no match is found.
      */
     public static QueryReverserType fromQuery(Query query) {
-        if (query.toString().contains("INSERT INTO")
-                && query.toString().contains("VALUES")) {
+        if (query instanceof InsertQuery) {
             return INSERT_REVERSER;
         }
-        if (query.toString().contains("CREATE")) {
+        if (query instanceof CreateQuery) {
             return CREATE_REVERSER;
         }
-        if (query.toString().contains("ALTER TABLE")) {
+        if (query instanceof AlterTableQuery) {
             return ALTER_TABLE_REVERSER;
         }
 

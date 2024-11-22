@@ -1,7 +1,11 @@
 package com.sqlundo.api.controller;
 
+import com.sqlundo.api.model.QueryDTO;
 import com.sqlundo.api.model.Script;
 import com.sqlundo.api.service.SQLUndoService;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +23,9 @@ public class SQLUndoController {
     }
 
     @PostMapping
-    public ResponseEntity<String> reverseScript(@RequestBody Script script) {
-        String reversedScript = sqlUndoService.undo(script);
+    public ResponseEntity<List<QueryDTO>> reverseScript(@RequestBody Script script) {
+        List<QueryDTO> revertedQueries = sqlUndoService.undo(script);
 
-        return ResponseEntity.ok(reversedScript);
+        return ResponseEntity.ok(revertedQueries);
     }
 }
