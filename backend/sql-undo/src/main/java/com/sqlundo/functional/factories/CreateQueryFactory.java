@@ -1,12 +1,11 @@
 package com.sqlundo.functional.factories;
 
+import java.util.regex.Matcher;
+
 import com.sqlundo.functional.enums.CreateQueryType;
 import com.sqlundo.functional.exception.MalformattedQueryException;
 import com.sqlundo.functional.models.CreateQuery;
 import com.sqlundo.functional.models.Query;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Factory class responsible for creating a {@link CreateQuery} object based on
@@ -28,7 +27,7 @@ import java.util.regex.Pattern;
  *
  * @author Luan Nadaletti
  */
-public class CreateQueryFactory implements QueryFactory {
+public class CreateQueryFactory extends BaseQueryFactory {
 
     /**
      * Creates a {@link CreateQuery} object based on the provided statement.
@@ -40,18 +39,9 @@ public class CreateQueryFactory implements QueryFactory {
      */
     @Override
     public Query createQuery(String statement) {
-        String regex = "\\s*CREATE\\s*(TABLE|SEQUENCE|EXCEPTION)\\s*(\\w+)\\s*";
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(statement);
+        Matcher matcher = match(statement, "\\s*CREATE\\s*(TABLE|SEQUENCE|EXCEPTION)\\s*(\\w+);\\s*");
 
-        if (!matcher.find()) {
-            throw new MalformattedQueryException("Invalid CREATE statement: " + statement);
-        }
-
-        String type = matcher.group(1);
-        String table = matcher.group(2);
-
-        return new CreateQuery(statement, table, CreateQueryType.fromType(type));
+        return new CreateQuery(statement, matcher.group(2), CreateQueryType.fromType(matcher.group(1)));
     }
 
 }

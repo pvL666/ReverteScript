@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import com.sqlundo.functional.exception.MalformattedQueryException;
 import com.sqlundo.functional.models.InsertQuery;
@@ -37,7 +35,7 @@ import com.sqlundo.functional.models.Query;
  *
  * @author Luan Nadaletti
  */
-public class InsertQueryFactory implements QueryFactory {
+public class InsertQueryFactory extends BaseQueryFactory {
 
     /**
      * Creates an {@link InsertQuery} object based on the provided statement.
@@ -49,13 +47,7 @@ public class InsertQueryFactory implements QueryFactory {
      */
     @Override
     public Query createQuery(String statement) {
-        String regex = "\\s*INSERT\\s*INTO\\s*(\\w+)\\s*\\((.+)\\)\\s*VALUES\\s*\\((.+)\\)\\s*";
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(statement);
-
-        if (!matcher.find()) {
-            throw new MalformattedQueryException("Invalid INSERT statement: " + statement);
-        }
+        Matcher matcher = match(statement, "\\s*INSERT\\s*INTO\\s*(\\w+)\\s*\\((.+)\\)\\s*VALUES\\s*\\((.+)\\)\\s*");
 
         String table = matcher.group(1);
         String fieldsGroup = matcher.group(2);
@@ -84,7 +76,6 @@ public class InsertQueryFactory implements QueryFactory {
             }
         }
 
-        // Add the last item
         if (current.length() > 0) {
             result.add(current.toString().trim());
         }

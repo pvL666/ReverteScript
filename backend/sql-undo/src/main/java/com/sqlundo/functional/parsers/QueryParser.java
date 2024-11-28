@@ -1,13 +1,13 @@
 package com.sqlundo.functional.parsers;
 
-import com.sqlundo.functional.enums.QueryType;
-import com.sqlundo.functional.exception.UnsupportedQueryException;
-import com.sqlundo.functional.factories.QueryFactory;
-import com.sqlundo.functional.models.Query;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.sqlundo.functional.enums.QueryType;
+import com.sqlundo.functional.exception.UnsupportedQueryException;
+import com.sqlundo.functional.factories.BaseQueryFactory;
+import com.sqlundo.functional.models.Query;
 
 /**
  * The QueryParser class is responsible for parsing a given SQL script and
@@ -89,7 +89,7 @@ public class QueryParser {
 			throw new UnsupportedQueryException("Unable to identify query type:: " + statement);
 		}
 
-		QueryFactory factory = queryType.getQueryFactory();
+		BaseQueryFactory factory = queryType.getFactoryInstance();
 
 		queries.add(factory.createQuery(statement));
 	}

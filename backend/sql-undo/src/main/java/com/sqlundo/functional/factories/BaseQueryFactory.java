@@ -1,5 +1,9 @@
 package com.sqlundo.functional.factories;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.sqlundo.functional.exception.MalformattedQueryException;
 import com.sqlundo.functional.models.Query;
 
 /**
@@ -35,7 +39,7 @@ import com.sqlundo.functional.models.Query;
  *
  * @author Luan Nadaletti
  */
-public interface QueryFactory {
+public abstract class BaseQueryFactory {
 
     /**
      * Creates a Query object based on the provided statement.
@@ -45,6 +49,17 @@ public interface QueryFactory {
      * @throws IllegalArgumentException If the statement is invalid or cannot be
      *                                  parsed.
      */
-    Query createQuery(String statement);
+    public abstract Query createQuery(String statement);
+
+    protected Matcher match(String statement, String regex) {
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(statement);
+
+        if (!matcher.matches()) {
+            throw new MalformattedQueryException("Invalid statement: " + statement);
+        }
+
+        return matcher;
+    }
 
 }

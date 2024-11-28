@@ -1,5 +1,7 @@
 package com.sqlundo.functional.enums;
 
+import java.util.function.Supplier;
+
 import com.sqlundo.functional.models.AlterTableQuery;
 import com.sqlundo.functional.models.CreateQuery;
 import com.sqlundo.functional.models.InsertQuery;
@@ -35,42 +37,28 @@ import com.sqlundo.functional.reversers.QueryReverser;
  * @see QueryReverser
  */
 public enum QueryReverserType {
-    INSERT_REVERSER {
-        @Override
-        public QueryReverser getQueryReverser() {
-            return new InsertQueryReverser();
-        }
-    },
 
-    CREATE_REVERSER {
-        @Override
-        public QueryReverser getQueryReverser() {
-            return new CreateQueryReverser();
-        }
-    },
+    INSERT_REVERSER(InsertQueryReverser::new),
+    CREATE_REVERSER(CreateQueryReverser::new),
+    ALTER_TABLE_REVERSER(AlterTableQueryReverser::new);
 
-    ALTER_TABLE_REVERSER {
-        @Override
-        public QueryReverser getQueryReverser() {
-            return new AlterTableQueryReverser();
-        }
-    };
+    private final Supplier<QueryReverser> reverserSupplier;
 
-    /**
-     * Returns the {@link QueryReverser} associated with this query reverser
-     * type.
-     *
-     * @return The query reverser for this query reverser type.
-     */
-    public abstract QueryReverser getQueryReverser();
+    QueryReverserType(Supplier<QueryReverser> reverserSupplier) {
+        this.reverserSupplier = reverserSupplier;
+    }
+
+    public QueryReverser getReverserInstance() {
+        return reverserSupplier.get();
+    }
 
     /**
      * Determines the {@code QueryReverserType} based on the given {@link Query}
      * object.
      *
      * @param query The query object.
-     * @return The query reverser type associated with the query, or
-     * {@code null} if no match is found.
+     * @return The query reverser type associated with the query, or {@code null} if
+     *         no match is found.
      */
     public static QueryReverserType fromQuery(Query query) {
         if (query instanceof InsertQuery) {

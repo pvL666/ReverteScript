@@ -1,7 +1,6 @@
 package com.sqlundo.functional.factories;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.sqlundo.functional.enums.AlterType;
 import com.sqlundo.functional.exception.MalformattedQueryException;
@@ -27,7 +26,7 @@ import com.sqlundo.functional.models.Query;
  *
  * @author Luan Nadaletti
  */
-public class AlterTableQueryFactory implements QueryFactory {
+public class AlterTableQueryFactory extends BaseQueryFactory {
 
     /**
      * Creates an {@link AlterTableQuery} object based on the provided statement.
@@ -39,13 +38,7 @@ public class AlterTableQueryFactory implements QueryFactory {
      */
     @Override
     public Query createQuery(String statement) {
-        String regex = "ALTER TABLE (\\w+)\\s+(ADD|DROP)\\s+(COLUMN\\s+)?(CONSTRAINT\\s+)?(\\w+)?(?:\\s+(\\w+))?";
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(statement);
-
-        if (!matcher.find()) {
-            throw new MalformattedQueryException("Invalid ALTER TABLE statement");
-        }
+        Matcher matcher = match(statement, "ALTER TABLE (\\w+)\\s+(ADD|DROP)\\s+(COLUMN\\s+)?(CONSTRAINT\\s+)?(\\w+)?(?:\\s+(\\w+))?");
 
         String table = matcher.group(1);
         String operator = matcher.group(2);

@@ -6,31 +6,19 @@ package com.sqlundo.functional.enums;
  */
 public enum CreateQueryType {
 
-    TABLE {
-        @Override
-        public String getKeyWord() {
-            return "TABLE";
-        }
-    },
-    SEQUENCE {
-        @Override
-        public String getKeyWord() {
-            return "SEQUENCE";
-        }
-    },
-    EXCEPTION {
-        @Override
-        public String getKeyWord() {
-            return "EXCEPTION";
-        }
-    };
+    TABLE("TABLE"),
+    SEQUENCE("SEQUENCE"),
+    EXCEPTION("EXCEPTION");
 
-    /**
-     * Returns the keyword associated with the query type.
-     *
-     * @return The keyword corresponding to the query type.
-     */
-    public abstract String getKeyWord();
+    private final String keyWord;
+
+    CreateQueryType(String keyWord) {
+        this.keyWord = keyWord;
+    }
+
+    public String getKeyWord() {
+        return keyWord;
+    }
 
     /**
      * Returns the query type based on a type string.

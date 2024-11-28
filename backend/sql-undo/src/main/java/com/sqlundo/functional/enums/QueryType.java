@@ -1,11 +1,12 @@
 package com.sqlundo.functional.enums;
 
+import java.util.Locale;
+import java.util.function.Supplier;
+
 import com.sqlundo.functional.factories.AlterTableQueryFactory;
+import com.sqlundo.functional.factories.BaseQueryFactory;
 import com.sqlundo.functional.factories.CreateQueryFactory;
 import com.sqlundo.functional.factories.InsertQueryFactory;
-import com.sqlundo.functional.factories.QueryFactory;
-
-import java.util.Locale;
 
 /**
  * The {@code QueryType} enum represents different types of SQL queries. Each
@@ -45,51 +46,30 @@ import java.util.Locale;
  * @see QueryFactory
  */
 public enum QueryType {
-    INSERT {
-        @Override
-        public QueryFactory getQueryFactory() {
-            return new InsertQueryFactory();
-        }
-    },
+    CREATE(CreateQueryFactory::new),
+    ALTER(AlterTableQueryFactory::new),
+    INSERT(InsertQueryFactory::new),
+    UPDATE(null);
 
-    CREATE {
-        @Override
-        public QueryFactory getQueryFactory() {
-            return new CreateQueryFactory();
-        }
-    },
+    private final Supplier<BaseQueryFactory> factorySupplier;
 
-    ALTER_TABLE {
-        @Override
-        public QueryFactory getQueryFactory() {
-            return new AlterTableQueryFactory();
-        }
-    },
+    QueryType(Supplier<BaseQueryFactory> factorySupplier) {
+        this.factorySupplier = factorySupplier;
+    }
 
-    UPDATE {
-        @Override
-        public QueryFactory getQueryFactory() {
-            return null;
-        }
-    };
-
-    /**
-     * Returns the {@link QueryFactory} associated with this query type.
-     *
-     * @return The query factory for this query type.
-     */
-    public abstract QueryFactory getQueryFactory();
+    public BaseQueryFactory getFactoryInstance() {
+        return factorySupplier.get();
+    }
 
     /**
      * Determines the {@code QueryType} based on the given SQL statement.
      *
      * @param statement The SQL statement.
-     * @return The query type associated with the statement, or {@code null} if
-     * no match is found.
+     * @return The query type associated with the statement, or {@code null} if no
+     *         match is found.
      */
     public static QueryType fromStatement(String statement) {
-        String statementTrimToLowerCase = statement.trim()
-                .toLowerCase(Locale.ROOT);
+        String statementTrimToLowerCase = statement.trim().toLowerCase(Locale.ROOT);
 
         if (statementTrimToLowerCase.contains("insert")) {
             return INSERT;
@@ -98,7 +78,7 @@ public enum QueryType {
             return CREATE;
         }
         if (statementTrimToLowerCase.contains("alter")) {
-            return ALTER_TABLE;
+            return ALTER;
         }
         if (statementTrimToLowerCase.contains("update")) {
             return UPDATE;

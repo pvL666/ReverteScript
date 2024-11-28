@@ -48,7 +48,7 @@ public class SQLUndoManager {
             throw new IllegalArgumentException("Cannot reverse query: " + query);
         }
 
-        QueryReverser reverser = reverserType.getQueryReverser();
+        QueryReverser reverser = reverserType.getReverserInstance();
         if (reverser == null) {
             throw new UnsupportedQueryException("Query reversal not supported: " + query);
         }
