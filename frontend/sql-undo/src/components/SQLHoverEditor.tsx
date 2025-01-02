@@ -105,7 +105,7 @@ const SQLHoverEditor: React.FC<SQLHoverEditorProps> = ({ queries }) => {
 	}, [queries]);
 
 	return (
-		<div className="relative w-full h-full bg-gray-900 text-gray-100 p-4">
+		<div className="relative w-full h-full bg-gray-900 text-gray-100 pl-4">
 			<div id="editor" className="h-96 border border-gray-700 rounded-md">
 				{tooltip && (
 					<div

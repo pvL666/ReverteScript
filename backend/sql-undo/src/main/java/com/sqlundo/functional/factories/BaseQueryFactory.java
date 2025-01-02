@@ -55,7 +55,7 @@ public abstract class BaseQueryFactory {
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(statement);
 
-        if (!matcher.matches()) {
+        if (!matcher.find()) {
             throw new MalformattedQueryException("Invalid statement: " + statement);
         }
 
